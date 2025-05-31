@@ -1,0 +1,5 @@
+env:             "local"
+postgresConnStr: "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+grpc:  
+  port:          50051  
+  timeout:       10h

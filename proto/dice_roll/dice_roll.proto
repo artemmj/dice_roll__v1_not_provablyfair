@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package dice_roll;
+
+option go_package = "proto.dice_roll";
+
+service DiceRollGameAPI {
+    rpc Play (PlayRequest) returns (PlayResponse);
+}
+
+message PlayRequest {}
+
+message PlayResponse {
+    string createdAt = 1;
+    int32 serverRoll = 2;
+    int32 playerRoll = 3;
+    string winner = 4;
+    string roller = 5;
+}
