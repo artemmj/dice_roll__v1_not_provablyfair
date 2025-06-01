@@ -29,7 +29,6 @@ func New(log *slog.Logger, game DiceRollGame) *DiceRollService {
 func (dr *DiceRollService) Play(ctx context.Context) (models.GameResult, error) {
 	const op = "services.dice_roll.Play"
 	plog := dr.log.With(slog.String("op", op))
-	plog.Debug("IN")
 
 	dice := dice.New(dr.log)
 	server := dice.Roll()
@@ -52,7 +51,10 @@ func (dr *DiceRollService) Play(ctx context.Context) (models.GameResult, error) 
 		Roller:     roller,
 	}
 
-	dr.game.SaveGame(ctx, dr.log, game_results)
+	_, err := dr.game.SaveGame(ctx, dr.log, game_results)
+	if err != nil {
+		plog.Error("Ошибка при попытке сохранения игры: ", slog.Any("err", err))
+	}
 
 	return game_results, nil
 }

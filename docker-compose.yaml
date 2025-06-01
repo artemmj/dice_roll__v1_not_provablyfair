@@ -5,15 +5,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    # environment:
-    #   - DB_HOST=db
-    #   - DB_PORT=5432
-    #   - DB_USER=${POSTGRES_USER}
-    #   - DB_PASSWORD=${POSTGRES_PASSWORD}
-    #   - DB_NAME=${POSTGRES_DB}
+    environment:
+      CONFIG_PATH: ./config/local.yaml
+      DB_HOST: db
+      DB_PORT: 5432
     ports:
       - "50051:50051"
-    command: sh -c "/app/dice_roll --config=/app/config/local.yaml"
+    command: sh -c "/app/migrator --migrations-path=./migrations && /app/dice_roll"
     healthcheck:
       test: ["CMD-SHELL", "grpc_health_probe -addr=:50051 || exit 1"]
       interval: 10s
@@ -37,6 +35,3 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-
-# volumes:
-#   volumes:

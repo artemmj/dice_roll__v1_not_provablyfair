@@ -31,8 +31,7 @@ func (s *Storage) SaveGame(
 	results models.GameResult,
 ) (models.GameResult, error) {
 	const op = "storage.postgres.SaveGame"
-	log = log.With(slog.String("op", op))
-	log.Debug("IN")
+	// log = log.With(slog.String("op", op))
 
 	created_at := results.CreatedAt
 	server := results.ServerRoll
@@ -40,17 +39,18 @@ func (s *Storage) SaveGame(
 	winner := results.Winner
 	roller := results.Roller
 
-	stmt, err := s.db.Prepare(
-		`INSERT INTO game_results (created_at, server, player, winner, roller)
-				VALUES (($1), ($2), ($3), ($4), ($5))`,
-	)
+	insertq := `INSERT INTO game_results (created_at, server, player, winner, roller)
+						VALUES (($1), ($2), ($3), ($4), ($5))`
+	stmt, err := s.db.Prepare(insertq)
 	if err != nil {
 		return models.GameResult{}, fmt.Errorf("%s: %w", op, err)
 	}
+
 	_, err = stmt.ExecContext(ctx, created_at, server, player, winner, roller)
 	if err != nil {
 		return models.GameResult{}, fmt.Errorf("%s: %w", op, err)
 	}
+
 	return models.GameResult{
 		CreatedAt:  created_at,
 		ServerRoll: server,

@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	Env             string     `yaml:"env" env-default:"local"`
-	GRPC            GRPCConfig `yaml:"grpc"`
-	PostgresConnStr string     `yaml:"postgresConnStr"`
+	Env                      string     `yaml:"env" env-default:"local"`
+	GRPC                     GRPCConfig `yaml:"grpc"`
+	PostgresConnStr          string     `yaml:"postgresConnStr"`
+	PostgresConnStrForDocker string     `yaml:"postgresConnStrForDocker"`
 }
 
 type GRPCConfig struct {
@@ -29,7 +30,7 @@ func MustLoad() *Config {
 	}
 	var cfg Config
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
-		panic("config path is empty: " + err.Error())
+		panic("config path is incorrect: " + err.Error())
 	}
 	return &cfg
 }

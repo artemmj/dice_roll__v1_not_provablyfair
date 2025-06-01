@@ -23,7 +23,9 @@ func main() {
 	main_app := dice_roll_main_app.New(
 		log,
 		cfg.GRPC.Port,
-		cfg.PostgresConnStr, // можно менять для нужной БД
+		// Немного отличается строка в докере TODO сделать нормально
+		// Чтобы запусть не в докере, надо поменять на cfg.postgresConnStr
+		cfg.PostgresConnStrForDocker,
 	)
 	// Создаем главный DiceRollMainApp и асинхронно отправляем его GRPCServer в MustRun()
 	go func() {

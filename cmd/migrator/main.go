@@ -12,17 +12,23 @@ import (
 )
 
 func main() {
-	cfg := config.MustLoad()
 	var migrationsPath, migrationsTable string
-	flag.StringVar(&migrationsPath, "migrations-path", "", "path to migrations")
+
+	flag.StringVar(&migrationsPath, "migrations-path", "./migrations", "path to migrations")
+	// Таблица, в которой будет храниться информация о миграциях. Она нужна
+	// для того, чтобы понимать, какие миграции уже применены, а какие нет.
+	// Дефолтное значение - 'migrations'.
 	flag.StringVar(&migrationsTable, "migrations-table", "migrations", "name of migrations table")
-	flag.Parse()
+	flag.Parse() // Выполняем парсинг флагов
+
 	if migrationsPath == "" {
 		panic("migrations-path is required")
 	}
 
+	cfg := config.MustLoad()
 	sourceURL := "file://" + migrationsPath
-	databaseURL := fmt.Sprintf(cfg.PostgresConnStr, migrationsTable)
+	// Тут тоже надо поменять строку подключения, чтобы подключиться не в докере
+	databaseURL := fmt.Sprintf("%s&x-migrations-table=%s", cfg.PostgresConnStrForDocker, migrationsTable)
 	m, err := migrate.New(sourceURL, databaseURL)
 	if err != nil {
 		panic(err)
