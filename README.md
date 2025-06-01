@@ -14,4 +14,5 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_DB=postgres
 ```
 4. Выполнить команду ```docker-compose up -d --build``` чтобы собрать контейнеры
-5. 
+5. В папке volumes/ появятся данные БД
+6. Чтобы сыграть, используем например Postman, подключимся к localhost:50051 by gRPC и выполним Play:
